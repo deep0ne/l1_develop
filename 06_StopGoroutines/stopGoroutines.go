@@ -1,3 +1,5 @@
+// 6. Реализовать все возможные способы остановки выполнения горутины.
+
 package main
 
 import (
@@ -48,7 +50,7 @@ func StopGoroutineWithBool() {
 }
 
 func StopGoroutineWithContext() {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background()) // создаём контекст и функцию отмены
 	go func(ctx context.Context) {
 		for {
 			select {

@@ -1,3 +1,5 @@
+// 7.Реализовать конкурентную запись данных в map.
+
 package main
 
 import (
@@ -12,14 +14,14 @@ type ConcurrentMap struct {
 	info map[string]int
 }
 
-func (c *ConcurrentMap) Put(str string) {
+func (c *ConcurrentMap) Put(str string, val int) {
 	c.lock.Lock() // лочим мьютекс перед записью, чтобы избежать состояние гонки
-	c.info[str]++
+	c.info[str] = val
 	c.lock.Unlock()
 }
 
 func (c *ConcurrentMap) Get(str string) int {
-	c.lock.RLock()
+	c.lock.RLock() // запираем мьютекс для чтения
 	v := c.info[str]
 	c.lock.RUnlock()
 	return v
@@ -37,9 +39,9 @@ func main() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		for i := 0; i < 1000; i++ {
-			num := strconv.Itoa(rand.Intn(2))
-			concurrentMap.Put(num)
+		for i := 0; i < 5; i++ {
+			num := strconv.Itoa(rand.Intn(5))
+			concurrentMap.Put(num, i)
 		}
 	}()
 	wg.Wait()

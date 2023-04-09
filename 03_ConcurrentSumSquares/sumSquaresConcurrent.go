@@ -65,6 +65,7 @@ func ConcurrentSumAtomic(nums []int) int {
 	return int(sum)
 }
 
+// функция для проверки
 func sum(nums []int) int {
 	var sum int
 	for _, num := range nums {

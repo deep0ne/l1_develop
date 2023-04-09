@@ -1,3 +1,5 @@
+// 25. Реализовать собственную функцию sleep.
+
 package main
 
 import (
@@ -6,6 +8,7 @@ import (
 	"time"
 )
 
+// 1. через цикл
 func Sleep(seconds int) {
 	start := time.Now()
 	for time.Since(start) < time.Duration(seconds)*time.Second {
@@ -13,6 +16,7 @@ func Sleep(seconds int) {
 	}
 }
 
+// 2. Через контекст с таймаутом
 func SleepWithCtx(seconds int) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(seconds)*time.Second)
 	defer cancel()

@@ -1,10 +1,12 @@
-package workers
+// 21. Реализовать паттерн «адаптер» на любом примере.
+
+package main
 
 import "fmt"
 
 // Mac USB - квадратый, Windows - круглый
 // У клиента есть только квадратный - соответсвенно можно вставить его только в мак
-// Нам нужен адаптер
+// Нам нужен windows-адаптер
 // У адаптера мы реализуем метод с квадратным USB
 // Таким образом клиент сможет использовать InsertSquareUSBInComputer и для мака, и для винды
 
@@ -47,9 +49,9 @@ func main() {
 	client.InsertSquareUSBInComputer(mac)
 
 	windowsMachine := &Windows{}
-	windowsMachineAdapter := &WindowsAdapter{
+	windowsMachineAdapter := &WindowsAdapter{ // создаём адаптер с машиной виндоус
 		WindowsMachine: windowsMachine,
 	}
-	client.InsertSquareUSBInComputer(windowsMachineAdapter)
+	client.InsertSquareUSBInComputer(windowsMachineAdapter) // теперь через него мы можем использовать квадратый usb
 
 }

@@ -1,5 +1,8 @@
+// 16. Реализовать быструю сортировку массива (quicksort) встроенными методами языка.
+
 package main
 
+// функция для перестановки элементов с учётом опроного
 func partition(nums []int, left, right int) int {
 	pivot := nums[right] // выбираем опорный элемент
 	index := left
@@ -20,6 +23,7 @@ func quickSort(nums []int, left, right int) {
 		return
 	}
 	part := partition(nums, left, right)
+	// применяем к двум подмассивам - левому и правому
 	quickSort(nums, left, part-1)
 	quickSort(nums, part+1, right)
 }

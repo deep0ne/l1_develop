@@ -1,3 +1,10 @@
+// 22. Разработать программу, которая перемножает, делит, складывает, вычитает две числовых переменных a,b, значение которых > 2^20.
+
+/*
+Алгоритм работы: считываем два числа у юзера и нужную операцию
+В зависимости от типа отправляем в одну из двух функций ниже
+*/
+
 package main
 
 import (
@@ -9,6 +16,7 @@ import (
 	"strconv"
 )
 
+// операции для интов
 func BigIntOperation(a, b *big.Int, operation string) *big.Int {
 	switch operation {
 	case "+":
@@ -24,10 +32,12 @@ func BigIntOperation(a, b *big.Int, operation string) *big.Int {
 		division := new(big.Int).Div(a, b)
 		return division
 	default:
-		return new(big.Int)
+		log.Fatal("WRONG OPERATION!!!")
+		return nil
 	}
 }
 
+// операции для флоат
 func BigFloatOperation(a, b *big.Float, operation string) *big.Float {
 	switch operation {
 	case "+":
@@ -43,6 +53,7 @@ func BigFloatOperation(a, b *big.Float, operation string) *big.Float {
 		division := new(big.Float).Quo(a, b)
 		return division
 	default:
+		log.Fatal("WRONG OPERATION!")
 		return new(big.Float)
 	}
 }
@@ -77,12 +88,12 @@ func main() {
 	} else {
 		a, success := new(big.Int).SetString(aString, 0)
 		if !success {
-			log.Fatal()
+			log.Fatal("Did not convert")
 		}
 
 		b, success := new(big.Int).SetString(bString, 0)
 		if !success {
-			log.Fatal()
+			log.Fatal("Did not convert")
 		}
 
 		fmt.Printf("%v %s %v = %s", a, operation, b, BigIntOperation(a, b, operation))
