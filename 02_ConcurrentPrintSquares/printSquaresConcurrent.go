@@ -22,7 +22,7 @@ func ConcurrentSquaresWithWG(nums [5]int) {
 }
 
 func ConcurrentSquaresWithChannel(nums [5]int) {
-	// создаём канал, куда будем отправлять квадраты
+	// создаём буферизированный канал, куда будем отправлять квадраты
 	ch := make(chan int, len(nums))
 	for _, num := range nums {
 		// запускаем свою горутину для каждого num
