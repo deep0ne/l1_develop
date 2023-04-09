@@ -6,6 +6,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"os"
@@ -20,7 +21,7 @@ import (
 // При получении сигнала завершаются работы воркеров.
 // Такой способ позволяет реализовать "чистое" завершение - корректное очищение ресурсов и выход
 
-func worker(id int, wg *sync.WaitGroup, jobs <-chan int, done chan struct{}) {
+func worker(id int, wg *sync.WaitGroup, jobs <-chan int, ctx context.Context) {
 	defer wg.Done()
 
 	for {
@@ -31,8 +32,7 @@ func worker(id int, wg *sync.WaitGroup, jobs <-chan int, done chan struct{}) {
 			}
 			fmt.Printf("Worker %d processing job %d\n", id, j)
 			time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
-		// ждём сигнала из канала, чтобы завершить цикл
-		case <-done:
+		case <-ctx.Done():
 			return
 		}
 	}
@@ -41,12 +41,12 @@ func worker(id int, wg *sync.WaitGroup, jobs <-chan int, done chan struct{}) {
 func StartWorkers(numWorkers int) {
 	jobs := make(chan int) // создаём канал с джобами
 
-	var wg sync.WaitGroup       // создаём вейт группу
-	done := make(chan struct{}) // канал завершения
+	var wg sync.WaitGroup                                   // создаём вейт группу
+	ctx, cancel := context.WithCancel(context.Background()) // в качестве альтернативы каналу завершения - контекст
 
 	for i := 1; i <= numWorkers; i++ {
 		wg.Add(1)
-		go worker(i, &wg, jobs, done) // запускаем воркеров
+		go worker(i, &wg, jobs, ctx) // запускаем воркеров
 	}
 
 	interrupt := make(chan os.Signal, 1) // канал для ожидания сигнала завершения
@@ -54,13 +54,13 @@ func StartWorkers(numWorkers int) {
 
 	go func() {
 		<-interrupt // блокируем выполнение
-		close(done) // как только читаем сигнал из канала, закрываем канал завершения
+		cancel()    // как только читаем сигнал из канала, вызываем функцию отмены
 	}()
 
 	go func() {
 		for {
 			select {
-			case <-done: // если закрыт, закрываем канал с джобами
+			case <-ctx.Done():
 				close(jobs)
 				return
 			default:
