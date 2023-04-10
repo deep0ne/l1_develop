@@ -9,20 +9,15 @@ import (
 
 func DefineType(value any) {
 	// TypeOf returns the reflection Type that represents the dynamic type of i.
-	fmt.Println(reflect.TypeOf(value))
+	fmt.Printf("The type of value is %s\n", reflect.TypeOf(value))
 }
 
 func main() {
-	var (
-		i int
-		s string
-		b bool
-		c chan int
-	)
 
-	DefineType(i)
-	DefineType(s)
-	DefineType(b)
-	DefineType(c)
+	c := make(chan int)
+	someElements := []any{"hello", 42, c, true}
+	for _, element := range someElements {
+		DefineType(element)
+	}
 
 }
