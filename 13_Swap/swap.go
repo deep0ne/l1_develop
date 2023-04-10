@@ -10,7 +10,3 @@ func main() {
 
 	fmt.Println(a == 10 && b == 5)
 }
-
-// func Swap(a, b *int) {
-// 	*a, *b = *b, *a
-// }
