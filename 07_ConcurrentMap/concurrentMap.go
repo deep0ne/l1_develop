@@ -11,25 +11,25 @@ import (
 
 type ConcurrentMap struct {
 	lock sync.RWMutex // используем RWMutex, коорый разделяет писателей и читателей
-	info map[string]int
+	data map[string]int
 }
 
-func (c *ConcurrentMap) Put(str string, val int) {
-	c.lock.Lock() // лочим мьютекс перед записью, чтобы избежать состояние гонки
-	c.info[str] = val
-	c.lock.Unlock()
+func (m *ConcurrentMap) Put(str string, val int) {
+	m.lock.Lock() // лочим мьютекс перед записью, чтобы избежать состояние гонки
+	m.data[str] = val
+	m.lock.Unlock()
 }
 
-func (c *ConcurrentMap) Get(str string) int {
-	c.lock.RLock() // запираем мьютекс для чтения
-	v := c.info[str]
-	c.lock.RUnlock()
-	return v
+func (m *ConcurrentMap) Get(str string) (int, bool) {
+	m.lock.RLock() // запираем мьютекс для чтения
+	v, ok := m.data[str]
+	m.lock.RUnlock()
+	return v, ok
 }
 
 func NewConcurrentMap() *ConcurrentMap {
 	return &ConcurrentMap{
-		info: make(map[string]int),
+		data: make(map[string]int),
 	}
 }
 
@@ -45,5 +45,5 @@ func main() {
 		}
 	}()
 	wg.Wait()
-	fmt.Println(concurrentMap.info)
+	fmt.Println(concurrentMap.data)
 }
