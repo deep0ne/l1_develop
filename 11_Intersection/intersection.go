@@ -14,6 +14,24 @@ func Intersection(firstSet, secondSet map[any]struct{}) []any {
 	return intersection
 }
 
+// если на вход у нас не "два неупорядоченных множества", а слайсы
+func IntersectionSlices(firstSet, secondSet []any) []any {
+	intersection := make([]any, 0) // слайс с найденными общими элементами
+	checker := make(map[any]struct{})
+
+	for _, key := range firstSet {
+		checker[key] = struct{}{}
+	}
+
+	for _, key := range secondSet {
+		if _, ok := checker[key]; ok {
+			intersection = append(intersection, key)
+		}
+	}
+
+	return intersection
+}
+
 func main() {
 	firstSet := map[any]struct{}{
 		"Hello":  {},
