@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-func ConcurrentSquaresWithWG(nums [5]int) {
+func ConcurrentSquaresWithWG(nums []int) {
 	wg := sync.WaitGroup{}
 	// т.к. запускаем горутину для каждого числа, создаём вейтгруппу с счётчиком 5
 	wg.Add(len(nums))
@@ -21,7 +21,7 @@ func ConcurrentSquaresWithWG(nums [5]int) {
 	wg.Wait() // ожидаем, пока горутины завершат свою работу
 }
 
-func ConcurrentSquaresWithChannel(nums [5]int) {
+func ConcurrentSquaresWithChannel(nums []int) {
 	// создаём буферизированный канал, куда будем отправлять квадраты
 	ch := make(chan int, len(nums))
 	for _, num := range nums {
@@ -38,7 +38,7 @@ func ConcurrentSquaresWithChannel(nums [5]int) {
 }
 
 func main() {
-	nums := [...]int{2, 4, 6, 8, 10}
+	nums := []int{2, 4, 6, 8, 10}
 	ConcurrentSquaresWithChannel(nums)
 	ConcurrentSquaresWithWG(nums)
 
