@@ -49,6 +49,7 @@ func StopGoroutineWithBool() {
 	time.Sleep(100 * time.Millisecond)
 }
 
+// 3. Через контекст
 func StopGoroutineWithContext() {
 	ctx, cancel := context.WithCancel(context.Background()) // создаём контекст и функцию отмены
 	go func(ctx context.Context) {
