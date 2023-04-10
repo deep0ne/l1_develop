@@ -31,15 +31,22 @@ func ConcurrentSumMutex(nums []int) int {
 func ConcurrentSumChannel(nums []int) int {
 	var (
 		sum int
+		wg  sync.WaitGroup
 	)
 
 	channel := make(chan int)
 
-	go func() {
-		for _, num := range nums {
+	for _, num := range nums {
+		wg.Add(1)
+		go func(num int) { // запускаем горутины и отправляем квадраты в канал
+			defer wg.Done()
 			channel <- num * num
-		}
-		close(channel) // закрываем канал, чтобы сигнализировать о том, что данные больше не будут поступать
+		}(num)
+	}
+
+	go func() {
+		wg.Wait()
+		close(channel) // горутина, которая ждёт завершения других горутин и закрывает канал
 	}()
 
 	for num := range channel { // читаем из канала и складываем в переменную
