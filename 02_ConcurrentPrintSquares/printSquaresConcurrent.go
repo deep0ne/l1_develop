@@ -41,5 +41,4 @@ func main() {
 	nums := []int{2, 4, 6, 8, 10}
 	ConcurrentSquaresWithChannel(nums)
 	ConcurrentSquaresWithWG(nums)
-
 }
